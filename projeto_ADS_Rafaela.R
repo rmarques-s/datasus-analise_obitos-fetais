@@ -8,6 +8,64 @@ getwd()
 
 # CRIANDO DATAFRAMES 
 
+obitos_fetais <- read.csv2("obitos_fetais.csv",
+                            stringsAsFactors = FALSE,
+                            fileEncoding = "latin1",
+                            na = c("", "NA", "n/d", "NULL", "-"))
+
+colnames(obitos_fetais) <- c(
+  "UF",
+  "Óbitos por ocorrência"
+)
+
+# Remover os números no início da string
+obitos_fetais$UF <- gsub("^[0-9]+\\s+", "", obitos_fetais$UF)
+
+obitos_fetais$UF <- sapply(obitos_fetais$UF, function(uf) {
+  switch(uf,
+         "Rondï¿½nia" = "Rondônia",
+         "Acre" = "Acre",
+         "Amazonas" = "Amazonas",
+         "Roraima" = "Roraima",
+         "Parï¿½" = "Pará",
+         "Amapï¿½" = "Amapá",
+         "Tocantins" = "Tocantins",
+         "Maranhï¿½o" = "Maranhão",
+         "Piauï¿½" = "Piauí",
+         "Cearï¿½" = "Ceará",
+         "Paraï¿½ba" = "Paraíba",
+         "Pernambuco" = "Pernambuco",
+         "Alagoas" = "Alagoas",
+         "Sergipe" = "Sergipe",
+         "Bahia" = "Bahia",
+         "Minas Gerais" = "Minas Gerais",
+         "Espï¿½rito Santo" = "Espírito Santo",
+         "Rio de Janeiro" = "Rio de Janeiro",
+         "Sï¿½o Paulo" = "São Paulo",
+         "Paranï¿½" = "Paraná",
+         "Santa Catarina" = "Santa Catarina",
+         "Rio Grande do Sul" = "Rio Grande do Sul",
+         "Mato Grosso do Sul" = "Mato Grosso do Sul",
+         "Mato Grosso" = "Mato Grosso",
+         "Goiï¿½s" = "Goiás",
+         "Distrito Federal" = "Distrito Federal",
+         uf
+  )
+})
+
+View(obitos_fetais)
+
+dados <- obitos_fetais[order(obitos_fetais$`Óbitos por ocorrência`, decreasing = TRUE), ]
+
+# Gráfico de barras
+ggplot(dados, aes(x = reorder(UF, `Óbitos por ocorrência`), y = `Óbitos por ocorrência`)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Óbitos por Ocorrência por Estado",
+       x = "Unidade Federativa (UF)",
+       y = "Óbitos por Ocorrência") +
+  theme_minimal()
+
 obitos_fetais_tipos_partos <- read.csv2("tipos_partos.csv",
                                         stringsAsFactors = FALSE,
                                         fileEncoding = "latin1",
@@ -27,7 +85,7 @@ obitos_fetais_tipos_partos$Total <- NULL
 View(obitos_fetais_tipos_partos)
 
 
-# 1. Remover os números no início da string
+# Remover os números no início da string
 obitos_fetais_tipos_partos$UF <- gsub("^[0-9]+\\s+", "", obitos_fetais_tipos_partos$UF)
 
 obitos_fetais_tipos_partos$UF <- sapply(obitos_fetais_tipos_partos$UF, function(uf) {
@@ -174,7 +232,28 @@ obitos_fetais_morte$`UF Ocorrência` <- sapply(obitos_fetais_morte$`UF Ocorrênc
   )
 })
 
+obitos_fetais_morte$`Não preenchido` <- NULL
+obitos_fetais_morte$`Ignorado` <- NULL
 View(obitos_fetais_morte)
+
+# COLUNAS NAO PREENCHIDO E IGNORADO FORAM EXCLUIDAS PARA TER DADOS MAIS CONSISTENTES.
+
+# Selecione as colunas relevantes: UF, Antes, Durante, Depois
+obitos_long <- obitos_fetais_morte %>%
+  select(`UF Ocorrência`, `Antes do parto`, `Durante o parto`, `Depois do parto`) %>%
+  pivot_longer(cols = c(`Antes do parto`, `Durante o parto`, `Depois do parto`),
+               names_to = "Fase", values_to = "Percentual")
+
+# Criar o gráfico de barras empilhadas
+ggplot(obitos_long, aes(x = reorder(`UF Ocorrência`, -Percentual), y = Percentual, fill = Fase)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(title = "Distribuição de Óbitos por Fase do Parto por UF",
+       x = "UF",
+       y = "Percentual (%)") +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal()
+
 
 obitos_fetais_duracao_gestacao <- read.csv2("duracao_gestacao.csv",
                                  stringsAsFactors = FALSE,
@@ -229,7 +308,26 @@ obitos_fetais_duracao_gestacao$`UF Ocorrência` <- sapply(obitos_fetais_duracao_
   )
 })
 
+obitos_fetais_duracao_gestacao$`Não preenchido` <- NULL
+obitos_fetais_duracao_gestacao$`Ignorado` <- NULL
 View(obitos_fetais_duracao_gestacao)
+
+# Selecione as colunas relevantes: UF, Antes, Durante, Depois
+obitos_long <- obitos_fetais_duracao_gestacao %>%
+  select(`UF Ocorrência`, `Menos 22`, `22 a 27`, `28 a 31`, ) %>%
+  pivot_longer(cols = c(`Antes do parto`, `Durante o parto`, `Depois do parto`),
+               names_to = "Fase", values_to = "Percentual")
+
+# Criar o gráfico de barras empilhadas
+ggplot(obitos_long, aes(x = reorder(`UF Ocorrência`, -Percentual), y = Percentual, fill = Fase)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(title = "Distribuição de Óbitos por Fase do Parto por UF",
+       x = "UF",
+       y = "Percentual (%)") +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal()
+
 
 obitos_fetais_tipo_gestacao <- read.csv2("tipo_gestacao.csv",
                                           stringsAsFactors = FALSE,
