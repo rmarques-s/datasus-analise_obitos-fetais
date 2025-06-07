@@ -159,11 +159,10 @@ get_regiao <- function(uf) {
   )
 }
 
+View(obitos_fetais_tipos_partos)
+
 # Criar a nova coluna de Região
 obitos_fetais_tipos_partos$Regiao <- sapply(obitos_fetais_tipos_partos$UF, get_regiao)
-
-
-
 
 # Transformar os dados em formato longo (long format)
 dados_longos <- pivot_longer(obitos_fetais_tipos_partos, 
@@ -174,14 +173,20 @@ View(obitos_fetais_tipos_partos)
 
 # Gráfico de barras empilhadas
 
-ggplot(dados_longos, aes(x = reorder(UF, -Percentual), y = Percentual, fill = TipoParto)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Proporção de Óbitos Fetais por Tipo de Parto e Estado",
-       x = "Estado",
-       y = "Percentual (%)",
-       fill = "Tipo de Parto") +
+ggplot(dados_longos, aes(x = Regiao, y = Percentual, fill = TipoParto)) +
+  geom_col(position = "fill") +
+  scale_y_continuous(labels = percent_format()) +
+  labs(
+    title = "Distribuição percentual dos tipos de parto por região",
+    x = "Região",
+    y = "Percentual",
+    fill = "Tipo de parto"
+  ) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
 
 obitos_fetais_morte <- read.csv2("mortes.csv",
                                 stringsAsFactors = FALSE,
@@ -239,10 +244,10 @@ View(obitos_fetais_morte)
 # COLUNAS NAO PREENCHIDO E IGNORADO FORAM EXCLUIDAS PARA TER DADOS MAIS CONSISTENTES.
 
 # Selecione as colunas relevantes: UF, Antes, Durante, Depois
-obitos_long <- obitos_fetais_morte %>%
-  select(`UF Ocorrência`, `Antes do parto`, `Durante o parto`, `Depois do parto`) %>%
-  pivot_longer(cols = c(`Antes do parto`, `Durante o parto`, `Depois do parto`),
-               names_to = "Fase", values_to = "Percentual")
+obitos_long <- obitos_fetais_duracao_gestacao %>%
+  select(`UF Ocorrência`, `Menos 22`, `22 a 27`, `28 a 31`, `32 a 36`, `37 a 41`, `42+`) %>%
+  pivot_longer(cols = -`UF Ocorrência`,
+               names_to = "FaixaGestacional", values_to = "Percentual")
 
 # Criar o gráfico de barras empilhadas
 ggplot(obitos_long, aes(x = reorder(`UF Ocorrência`, -Percentual), y = Percentual, fill = Fase)) +
@@ -376,6 +381,10 @@ obitos_fetais_tipo_gestacao$`UF Ocorrência` <- sapply(obitos_fetais_tipo_gestac
          uf
   )
 })
+
+obitos_fetais_tipo_gestacao$`Não preenchido` <- NULL
+obitos_fetais_tipo_gestacao$`Ignorado` <- NULL
+
 
 View(obitos_fetais_tipo_gestacao)
 
