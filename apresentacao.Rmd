@@ -1,8 +1,10 @@
 ---
-title: "Completitude de campos relacionados aos dados da mãe em Óbitos Fetais"
+title: "Completitude de campos relacionados aos dados da mãe em óbitos fetais"
 output: 
   html_document:
     css: estilo.css
+    fig_width: 25
+    fig_height: 6
 ---
 
 DEB3102 - ANÁLISE DE DADOS EM SAÚDE
@@ -65,8 +67,53 @@ A completitude (ou preenchimento adequado) dos campos é um dos principais indic
 
 <br>
 
+## Quais estados tiveram dados mais expressivos?
+
 ![Fonte: Próprio autor](obitos_por_estado.png)
 
-![Fonte: Próprio autor](obitos_por_fase_do_parto.png)
+<br>
 
+| Estado         | População (2023) |
+|----------------|------------------|
+| São Paulo      | 45.973.194       |
+| Rio de Janeiro | 21.322.691       |
+| Bahia          | 17.219.679       |
+| Minas Gerais   | 14.850.513       |
 
+<br>
+
+## Qual tipo de parto teve mais óbitos?
+
+<br>
+
+![Fonte: Próprio autor](tipo_parto.png)
+<br>
+
+## Os óbitos ocorreram em qual momento?
+
+<br>
+![Fonte: Próprio autor](momento_parto.png)
+
+<br>
+
+## Em qual semana a gestação estava?
+
+<br>
+
+![Fonte: Próprio autor](duracao_gestacao.png)
+
+<br>
+
+## Análise dos dados
+
+* Maior número de óbitos informados:
+A região Norte, juntamente com a Nordeste, apresenta maior número de óbitos fetais informados no Sistema de Informação sobre Mortalidade (SIM), em comparação com as regiões mais desenvolvidas. 
+
+* Desigualdades regionais:
+As diferenças regionais na enumeração dos registros de óbitos fetais refletem desigualdades socioeconômicas e de acesso à saúde.
+
+* Fatores de risco:
+As principais causas de óbitos fetais incluem hipertensão arterial, infecções, problemas placentários, e questões genéticas e/ou anatômicas. 
+
+* Investigações:
+A investigação dos óbitos infantis e fetais ainda é baixa, especialmente nas regiões Norte e Nordeste, o que dificulta a identificação de fatores de risco e a implementação de medidas de prevenção. 
