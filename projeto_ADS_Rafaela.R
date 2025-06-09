@@ -53,6 +53,51 @@ obitos_fetais$UF <- sapply(obitos_fetais$UF, function(uf) {
   )
 })
 
+# Função para mapear UF para Região
+get_regiao <- function(uf) {
+  switch(uf,
+         "Rondônia" = "Norte",
+         "Acre" = "Norte",
+         "Amazonas" = "Norte",
+         "Roraima" = "Norte",
+         "Pará" = "Norte",
+         "Amapá" = "Norte",
+         "Tocantins" = "Norte",
+         
+         "Maranhão" = "Nordeste",
+         "Piauí" = "Nordeste",
+         "Ceará" = "Nordeste",
+         "Rio Grande do Norte" = "Nordeste",
+         "Paraíba" = "Nordeste",
+         "Pernambuco" = "Nordeste",
+         "Alagoas" = "Nordeste",
+         "Sergipe" = "Nordeste",
+         "Bahia" = "Nordeste",
+         
+         "Mato Grosso" = "Centro-Oeste",
+         "Mato Grosso do Sul" = "Centro-Oeste",
+         "Goiás" = "Centro-Oeste",
+         "Distrito Federal" = "Centro-Oeste",
+         
+         "São Paulo" = "Sudeste",
+         "Rio de Janeiro" = "Sudeste",
+         "Minas Gerais" = "Sudeste",
+         "Espírito Santo" = "Sudeste",
+         
+         "Paraná" = "Sul",
+         "Santa Catarina" = "Sul",
+         "Rio Grande do Sul" = "Sul",
+         
+         NA # Caso não seja mapeado
+  )
+}
+
+
+View(obitos_fetais)
+
+# Criar a nova coluna de Região
+obitos_fetais$Regiao <- sapply(obitos_fetais$UF, get_regiao)
+
 View(obitos_fetais)
 
 dados <- obitos_fetais[order(obitos_fetais$`Óbitos por ocorrência`, decreasing = TRUE), ]
@@ -65,6 +110,43 @@ ggplot(dados, aes(x = reorder(UF, `Óbitos por ocorrência`), y = `Óbitos por o
        x = "Unidade Federativa (UF)",
        y = "Óbitos por Ocorrência") +
   theme_minimal()
+
+# plotando gráfico por região
+
+# 1. Garantir que a coluna de óbitos é numérica
+obitos_fetais$`Óbitos por ocorrência` <- 
+  as.numeric(gsub("[^0-9]", "", obitos_fetais$`Óbitos por ocorrência`))
+
+# 2. Somar óbitos por região
+obitos_por_regiao <- obitos_fetais %>% 
+  group_by(Regiao) %>% 
+  summarise(Obitos = sum(`Óbitos por ocorrência`, na.rm = TRUE))
+
+# 3. Passar para formato longo — aqui só há uma coluna numérica,
+#    mas o processo continua válido
+obitos_long <- obitos_por_regiao %>% 
+  pivot_longer(
+    cols      = Obitos,
+    names_to  = "Tipo",          # nome genérico para a “variável”
+    values_to = "Total_Obitos"   # onde ficam os valores numéricos
+  )
+
+# 4. (opcional) ordem geográfica para o eixo
+obitos_long$Regiao <- factor(obitos_long$Regiao,
+                             levels = c("Norte","Nordeste","Centro-Oeste",
+                                        "Sudeste","Sul"))
+
+# 5. Plotar
+ggplot(obitos_long, aes(x = Regiao,
+                        y = Total_Obitos,
+                        fill = Regiao)) +
+  geom_col(width = 0.7) +
+  labs(title = "Óbitos Fetais por Região",
+       x      = "Região",
+       y      = "Total de Óbitos") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "none")
+
 
 obitos_fetais_tipos_partos <- read.csv2("tipos_partos.csv",
                                         stringsAsFactors = FALSE,
@@ -614,6 +696,4 @@ ggplot(obitos_long, aes(x = Numero_filhos, y = Percentual, color = Regiao, group
     color = "Região"
   ) +
   theme_minimal()
-
-
 

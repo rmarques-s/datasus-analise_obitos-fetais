@@ -1,5 +1,5 @@
 ---
-title: "Completitude de campos relacionados aos dados da mãe em óbitos fetais"
+title: "Completitude de campos relacionados aos dados da mãe em óbitos fetais e menores de 1 ano"
 output: 
   html_document:
     css: estilo.css
@@ -15,9 +15,9 @@ Aluna: Rafaela Ribeiro Marques dos Santos
 
 Do ponto de vista social:
 
-##👩‍👧‍👦 1. Invisibilidade de mulheres e bebês em situação de vulnerabilidade
+## 👩‍👧‍👦 1. Invisibilidade de mulheres e bebês em situação de vulnerabilidade
 
-Se os dados sobre a mãe não são registrados adequadamente, essas gestantes — muitas vezes pobres, negras, indígenas ou com baixa escolaridade — se tornam estatisticamente invisíveis.
+Se os dados sobre a mãe não são registrados adequadamente, essas gestantes se tornam estatisticamente invisíveis.
 
 ❗ O que não é registrado, não é visto — e o que não é visto, não é prioridade.
 
@@ -82,6 +82,28 @@ A completitude (ou preenchimento adequado) dos campos é um dos principais indic
 
 <br>
 
+## Agrupando dados por região
+
+<br>
+
+![Fonte: Próprio autor](obitos_regiao.png)
+
+<br>
+
+![Fonte: Próprio autor](propocional_obitos.png)
+
+<br>
+
+## 🔍 Observações:
+
+- A região Norte apresenta a maior taxa proporcional (20,14).
+
+- O Sudeste, apesar de ter o maior número absoluto de óbitos, tem uma taxa proporcional menor que a média.
+
+- Esse tipo de ajuste populacional é crucial para análises justas entre regiões.
+
+<br>
+
 ## Qual tipo de parto teve mais óbitos?
 
 <br>
@@ -104,6 +126,12 @@ A completitude (ou preenchimento adequado) dos campos é um dos principais indic
 
 <br>
 
+## Essas mulheres possuem o mesmo histórico em gestações passadas?
+
+<br>
+
+![Fonte: Próprio autor](numero_filhos.png)
+
 ## Análise dos dados
 
 * Maior número de óbitos informados:
@@ -116,4 +144,6 @@ As diferenças regionais na enumeração dos registros de óbitos fetais reflete
 As principais causas de óbitos fetais incluem hipertensão arterial, infecções, problemas placentários, e questões genéticas e/ou anatômicas. 
 
 * Investigações:
-A investigação dos óbitos infantis e fetais ainda é baixa, especialmente nas regiões Norte e Nordeste, o que dificulta a identificação de fatores de risco e a implementação de medidas de prevenção. 
+A investigação dos óbitos infantis e fetais ainda é baixa, o que dificulta a identificação de fatores de risco e a implementação de medidas de prevenção. 
+
+<br>  
